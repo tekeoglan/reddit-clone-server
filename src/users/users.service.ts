@@ -14,20 +14,9 @@ export class UsersService {
     });
   }
 
-  async getUsers(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.usersWhereUniqueInput;
-    where?: Prisma.usersWhereInput;
-    orderBy?: Prisma.usersOrderByWithRelationInput;
-  }): Promise<UserModel[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  async getUsers(params: Prisma.usersFindManyArgs): Promise<UserModel[]> {
     return this.prisma.users.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
+      ...params,
     });
   }
 
