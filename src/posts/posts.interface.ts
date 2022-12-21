@@ -1,4 +1,4 @@
-export interface Post {
+export interface PostInterface {
   title: string;
   text?: string;
   img_path?: string;
