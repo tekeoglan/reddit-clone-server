@@ -1,4 +1,4 @@
-import { Exclude, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 import Post from '../posts/posts.entity';
 import Comment from '../comments/comments.entity';
 
@@ -8,6 +8,7 @@ class User {
   user_avatar: string;
   @Type(() => Post)
   posts: Post[];
+
   @Type(() => Comment)
   comments: Comment[];
 
@@ -15,7 +16,7 @@ class User {
     Object.assign(this, partial);
   }
 
-  getOverView(): Array<Post | Comment> {
+  get overView(): Array<Post | Comment> {
     // @ts-ignore
     const result = this.posts.concat(this.comments);
     result.sort((a, b) => Date.parse(a.time_stamp) - Date.parse(b.time_stamp));

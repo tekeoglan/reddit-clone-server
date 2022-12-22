@@ -6,13 +6,13 @@ import { posts as PostModel, Prisma } from '@prisma/client';
 export class PostsService {
   constructor(private prisma: PrismaService) {}
 
-  async getPosts(params: Prisma.postsFindManyArgs): Promise<PostModel[]> {
+  async getPosts(params: Prisma.postsFindManyArgs): Promise<unknown> {
     return this.prisma.posts.findMany({
       ...params,
     });
   }
 
-  async getPost(args: Prisma.postsFindFirstArgs): Promise<PostModel | null> {
+  async getPost(args: Prisma.postsFindFirstArgs): Promise<unknown> {
     return this.prisma.posts.findFirst({
       ...args,
     });

@@ -13,7 +13,7 @@ export class CommentsController {
 
   @Get()
   findAll() {
-    return this.commentsService.findAll({});
+    return this.commentsService.findAll({ orderBy: { time_stamp: 'desc' } });
   }
 
   @Delete('comment/:id')

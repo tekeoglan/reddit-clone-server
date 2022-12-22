@@ -39,7 +39,7 @@ export class UsersController {
   }
 
   @Get('user/:id/overview')
-  async findOne(@Param('id') id: string) {
+  async getUserOverView(@Param('id') id: string) {
     const data = (await this.usersService.getUser({
       where: { user_id: Number(id) },
       select: {
@@ -58,7 +58,40 @@ export class UsersController {
         },
       },
     })) as {};
-    return new User({ ...data }).getOverView();
+    return new User({ ...data }).overView;
+  }
+
+  @Get('user/:id/posts')
+  async getUserPosts(@Param('id') id: string) {
+    const data = (await this.usersService.getUser({
+      where: { user_id: Number(id) },
+      select: {
+        posts: {
+          orderBy: {
+            time_stamp: 'desc',
+          },
+        },
+      },
+    })) as {};
+    return new User({ ...data });
+  }
+
+  @Get('user/:id/comments')
+  async getUserComments(@Param('id') id: string) {
+    const data = (await this.usersService.getUser({
+      where: { user_id: Number(id) },
+      select: {
+        comments: {
+          include: {
+            posts: true,
+          },
+          orderBy: {
+            time_stamp: 'desc',
+          },
+        },
+      },
+    })) as {};
+    return new User({ ...data });
   }
 
   @Patch('user/:id')

@@ -1,8 +1,24 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post as Create,
+  Body,
+  Param,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  SerializeOptions,
+} from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { PostInterface } from './posts.interface';
+import Post from './posts.entity';
 
 @Controller('posts')
+@SerializeOptions({
+  type: Post,
+  enableCircularCheck: true,
+  enableImplicitConversion: true,
+})
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -15,7 +31,7 @@ export class PostsController {
     });
   }
 
-  @Post('post')
+  @Create('post')
   async create(@Body() postData: PostInterface) {
     return this.postsService.createPost(postData);
   }
