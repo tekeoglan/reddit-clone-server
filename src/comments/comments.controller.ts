@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentInterface } from './comments.interface';
 
@@ -20,9 +12,8 @@ export class CommentsController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
-    //return this.commentsService.findAll({});
-    return `${query}`;
+  findAll() {
+    return this.commentsService.findAll({});
   }
 
   @Delete('comment/:id')

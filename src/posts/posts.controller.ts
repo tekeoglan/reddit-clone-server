@@ -8,7 +8,11 @@ export class PostsController {
 
   @Get()
   async findAll() {
-    return this.postsService.getPosts({});
+    return this.postsService.getPosts({
+      orderBy: {
+        time_stamp: 'desc',
+      },
+    });
   }
 
   @Post('post')
@@ -18,6 +22,9 @@ export class PostsController {
 
   @Get('post/:id')
   async findOne(@Param('id') id: string) {
-    return this.postsService.getPost({ post_id: Number(id) });
+    return this.postsService.getPost({
+      where: { post_id: Number(id) },
+      include: { comments: { orderBy: { time_stamp: 'desc' } } },
+    });
   }
 }

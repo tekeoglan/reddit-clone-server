@@ -6,17 +6,15 @@ import { posts as PostModel, Prisma } from '@prisma/client';
 export class PostsService {
   constructor(private prisma: PrismaService) {}
 
-  async getPost(
-    postsWhereUniqueInput: Prisma.postsWhereUniqueInput,
-  ): Promise<PostModel | null> {
-    return this.prisma.posts.findUnique({
-      where: postsWhereUniqueInput,
-    });
-  }
-
   async getPosts(params: Prisma.postsFindManyArgs): Promise<PostModel[]> {
     return this.prisma.posts.findMany({
       ...params,
+    });
+  }
+
+  async getPost(args: Prisma.postsFindFirstArgs): Promise<PostModel | null> {
+    return this.prisma.posts.findFirst({
+      ...args,
     });
   }
 

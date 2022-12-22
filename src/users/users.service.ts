@@ -6,13 +6,13 @@ import { users as UserModel, Prisma } from '@prisma/client';
 export class UsersService {
   constructor(private prisma: PrismaService) {}
 
-  async getUsers(params: Prisma.usersFindManyArgs): Promise<UserModel[]> {
+  async getUsers(params: Prisma.usersFindManyArgs): Promise<unknown> {
     return this.prisma.users.findMany({
       ...params,
     });
   }
 
-  async getUser(args: Prisma.usersFindFirstArgs): Promise<UserModel | null> {
+  async getUser(args: Prisma.usersFindFirstArgs): Promise<unknown> {
     return this.prisma.users.findFirst({
       ...args,
     });

@@ -8,23 +8,29 @@ import {
   Delete,
   UseInterceptors,
   ClassSerializerInterceptor,
+  SerializeOptions,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UserInterface } from './users.interface';
-import { users as UserModel } from '@prisma/client';
-import { UserOverviewEntity } from './userOvierview.entity';
+import User from './users.entity';
 
 @Controller('users')
+@SerializeOptions({
+  type: User,
+  enableCircularCheck: true,
+  enableImplicitConversion: true,
+})
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(): Promise<UserModel[]> {
+  async findAll() {
     return this.usersService.getUsers({});
   }
 
   @Post('user')
-  async create(@Body() userData: UserInterface): Promise<UserModel> {
+  async create(@Body() userData: UserInterface) {
     const { user_name, avatar_path } = userData;
     return this.usersService.createUser({
       user_name,
@@ -32,39 +38,31 @@ export class UsersController {
     });
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
-  @Get('user/:id')
+  @Get('user/:id/overview')
   async findOne(@Param('id') id: string) {
     const data = (await this.usersService.getUser({
       where: { user_id: Number(id) },
       select: {
-        user_name: true,
         posts: {
           orderBy: {
             time_stamp: 'desc',
           },
         },
         comments: {
+          include: {
+            posts: true,
+          },
           orderBy: {
             time_stamp: 'desc',
           },
         },
       },
-    })) as UserInterface;
-
-    const entity = new UserOverviewEntity({
-      userName: data?.user_name || 'user',
-      posts: data?.posts || [],
-      comments: data?.comments || [],
-    });
-    return entity.overView;
+    })) as {};
+    return new User({ ...data }).getOverView();
   }
 
   @Patch('user/:id')
-  async update(
-    @Param('id') id: string,
-    @Body() data: { avatar_path: string },
-  ): Promise<UserModel> {
+  async update(@Param('id') id: string, @Body() data: { avatar_path: string }) {
     const { avatar_path } = data;
     return this.usersService.updateUser({
       data: { avatar_path },
