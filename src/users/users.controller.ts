@@ -11,8 +11,8 @@ import {
   SerializeOptions,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserInterface } from './users.interface';
 import User from './users.entity';
+import { UserCreateDTO, UserPatchDTO } from './dto';
 
 @Controller('users')
 @SerializeOptions({
@@ -30,11 +30,10 @@ export class UsersController {
   }
 
   @Post('user')
-  async create(@Body() userData: UserInterface) {
-    const { user_name, avatar_path } = userData;
+  async create(@Body() data: UserCreateDTO) {
     return this.usersService.createUser({
-      user_name,
-      avatar_path,
+      user_name: data.userName,
+      avatar_path: data.userAvatarPath,
     });
   }
 
@@ -95,10 +94,9 @@ export class UsersController {
   }
 
   @Patch('user/:id')
-  async update(@Param('id') id: string, @Body() data: { avatar_path: string }) {
-    const { avatar_path } = data;
+  async update(@Param('id') id: string, @Body() data: UserPatchDTO) {
     return this.usersService.updateUser({
-      data: { avatar_path },
+      data: { avatar_path: data.userAvatarPath },
       where: { user_id: Number(id) },
     });
   }
