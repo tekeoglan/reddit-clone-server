@@ -37,6 +37,19 @@ export class UsersController {
     });
   }
 
+  @Patch('user/:id')
+  async update(@Param('id') id: string, @Body() data: UserPatchDTO) {
+    return this.usersService.updateUser({
+      data: { avatar_path: data.userAvatarPath },
+      where: { user_id: Number(id) },
+    });
+  }
+
+  @Delete('user/:id')
+  async remove(@Param('id') id: string) {
+    return this.usersService.deleteUser({ user_id: Number(id) });
+  }
+
   @Get('user/:id/overview')
   async getUserOverView(@Param('id') id: string) {
     const data = (await this.usersService.getUser({
@@ -91,18 +104,5 @@ export class UsersController {
       },
     })) as {};
     return new User({ ...data });
-  }
-
-  @Patch('user/:id')
-  async update(@Param('id') id: string, @Body() data: UserPatchDTO) {
-    return this.usersService.updateUser({
-      data: { avatar_path: data.userAvatarPath },
-      where: { user_id: Number(id) },
-    });
-  }
-
-  @Delete('user/:id')
-  async remove(@Param('id') id: string) {
-    return this.usersService.deleteUser({ user_id: Number(id) });
   }
 }
