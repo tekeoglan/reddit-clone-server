@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -12,7 +11,9 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import User from './users.entity';
-import { UserCreateDTO, UserPatchDTO } from './dto';
+import { UserPatchDTO } from './dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('users')
 @SerializeOptions({
@@ -24,28 +25,17 @@ import { UserCreateDTO, UserPatchDTO } from './dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get()
-  async findAll() {
-    return this.usersService.getUsers({});
-  }
-
-  @Post('user')
-  async create(@Body() data: UserCreateDTO) {
-    return this.usersService.createUser({
-      user_name: data.userName,
-      avatar_path: data.userAvatarPath,
-    });
-  }
-
   @Patch('user/:id')
+  @UseGuards(JwtAuthGuard)
   async update(@Param('id') id: string, @Body() data: UserPatchDTO) {
     return this.usersService.updateUser({
-      data: { avatar_path: data.userAvatarPath },
+      data: { avatar_path: data.userAvatarPath, password: data.userPassword },
       where: { user_id: Number(id) },
     });
   }
 
   @Delete('user/:id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.deleteUser({ user_id: Number(id) });
   }

@@ -1,4 +1,5 @@
 export class UserCreateDTO {
   userName: string;
-  userAvatarPath: string;
+  userEmail: string;
+  userPassword: string;
 }
