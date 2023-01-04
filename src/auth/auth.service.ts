@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { users as User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 import { UserCreateDTO } from '../users/dto';
+import { excludeKey } from '../utils';
 
 @Injectable()
 export class AuthService {
@@ -42,6 +43,6 @@ export class AuthService {
       email: data.userEmail,
       password: hashedPasword,
     });
-    return result;
+    return excludeKey(result, ['password']);
   }
 }
