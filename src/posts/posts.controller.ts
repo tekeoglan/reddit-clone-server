@@ -12,7 +12,7 @@ import {
 import { PostsService } from './posts.service';
 import { PostInterface } from './posts.interface';
 import Post from './posts.entity';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { SessionGuard } from '../auth/session.guard';
 
 @Controller('posts')
 @SerializeOptions({
@@ -34,7 +34,7 @@ export class PostsController {
   }
 
   @Create('post')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SessionGuard)
   async create(@Body() postData: PostInterface) {
     return this.postsService.createPost(postData);
   }

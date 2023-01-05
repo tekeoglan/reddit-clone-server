@@ -19,6 +19,7 @@ async function bootstrap() {
     password: process.env.PG_PASSWORD,
     port: parseInt(process.env.PG_PORT || '0'),
   };
+
   const client = new Client(conObject);
   client.connect();
 

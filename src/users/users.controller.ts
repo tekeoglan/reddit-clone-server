@@ -13,7 +13,7 @@ import { UsersService } from './users.service';
 import User from './users.entity';
 import { UserPatchDTO } from './dto';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { SessionGuard } from '../auth/session.guard';
 
 @Controller('users')
 @SerializeOptions({
@@ -26,7 +26,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Patch('user/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SessionGuard)
   async update(@Param('id') id: string, @Body() data: UserPatchDTO) {
     return this.usersService.updateUser({
       data: { avatar_path: data.userAvatarPath, password: data.userPassword },
@@ -35,7 +35,7 @@ export class UsersController {
   }
 
   @Delete('user/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SessionGuard)
   async remove(@Param('id') id: string) {
     return this.usersService.deleteUser({ user_id: Number(id) });
   }

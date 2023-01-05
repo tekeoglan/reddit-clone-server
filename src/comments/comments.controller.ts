@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentInterface } from './comments.interface';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { SessionGuard } from 'src/auth/session.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -21,13 +21,13 @@ export class CommentsController {
   }
 
   @Post('comment')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SessionGuard)
   create(@Body() data: CommentInterface) {
     return this.commentsService.create(data);
   }
 
   @Delete('comment/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(SessionGuard)
   remove(@Param('id') id: string) {
     return this.commentsService.remove({ comment_id: Number(id) });
   }

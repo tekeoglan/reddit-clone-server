@@ -5,9 +5,11 @@ import {
   Body,
   BadRequestException,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
+import { SessionGuard } from './auth/session.guard';
 import { UserCreateDTO } from './users/dto';
 import { UserLoginDto } from './users/dto/userLogin.dto';
 
@@ -25,21 +27,14 @@ export class AppController {
 
   @Post('login')
   async login(@Body() data: UserLoginDto, @Req() req: any) {
-    const user = await this.authService.validateUser(
-      data.userEmail,
-      data.userPassword,
-    );
+    const user = await this.authService.login(data);
 
     if (!user) {
       throw new BadRequestException('Invalid email or pasword');
     }
 
     req.session.user = user;
-    const token = await this.authService.login({ ...user });
-    return {
-      access_token: token,
-      user: user,
-    };
+    return user;
   }
 
   @Post('register')
@@ -55,10 +50,8 @@ export class AppController {
   }
 
   @Post('fetch-user')
+  @UseGuards(SessionGuard)
   async getUser(@Req() req: any) {
-    if (req.sessionID && req.session.user) {
-      return { user: req.session.user };
-    }
-    throw new BadRequestException('session not found');
+    return { user: req.session.user };
   }
 }
