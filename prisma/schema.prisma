@@ -11,7 +11,7 @@ model comments {
   comment_id    Int      @id @default(autoincrement())
   post_id       Int
   user_id       Int
-  time_stamp    DateTime @db.Timestamp(6)
+  time_stamp    DateTime @default(now()) @db.Timestamp(6)
   text          String
   upvotes_count Int?     @default(0)
   posts         posts    @relation(fields: [post_id], references: [post_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_post_id")
@@ -26,7 +26,7 @@ model posts {
   yt_path       String?    @default("") @db.VarChar(255)
   upvotes_count Int?       @default(0)
   user_id       Int
-  time_stamp    DateTime   @db.Timestamp(6)
+  time_stamp    DateTime   @default(now()) @db.Timestamp(6)
   comments      comments[]
   users         users      @relation(fields: [user_id], references: [user_id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user_id")
 }

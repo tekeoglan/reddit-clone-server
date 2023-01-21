@@ -22,6 +22,18 @@ export class PostsService {
     return this.prisma.posts.create({ data });
   }
 
+  async update(params: {
+    where: Prisma.postsWhereUniqueInput;
+    data: Prisma.postsUpdateInput;
+  }): Promise<PostModel> {
+    const { where, data } = params;
+
+    return this.prisma.posts.update({
+      where,
+      data,
+    });
+  }
+
   async deletePost(
     where: Prisma.postsWhereUniqueInput,
   ): Promise<PostModel | null> {

@@ -1,13 +1,11 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   BadRequestException,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { SessionGuard } from './auth/session.guard';
 import { UserCreateDTO } from './users/dto';
@@ -15,15 +13,7 @@ import { UserLoginDto } from './users/dto/userLogin.dto';
 
 @Controller()
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly authService: AuthService,
-  ) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   async login(@Body() data: UserLoginDto, @Req() req: any) {

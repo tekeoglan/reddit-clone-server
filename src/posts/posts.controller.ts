@@ -10,9 +10,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { PostInterface } from './posts.interface';
 import Post from './posts.entity';
 import { SessionGuard } from '../auth/session.guard';
+import { PostCreateDTO } from './dto';
 
 @Controller('posts')
 @SerializeOptions({
@@ -35,8 +35,18 @@ export class PostsController {
 
   @Create('post')
   @UseGuards(SessionGuard)
-  async create(@Body() postData: PostInterface) {
-    return this.postsService.createPost(postData);
+  async create(@Body() data: PostCreateDTO) {
+    return this.postsService.createPost({
+      title: data.title,
+      text: data.text,
+      img_path: data.imagePath,
+      yt_path: data.ytPath,
+      users: {
+        connect: {
+          user_id: data.userId,
+        },
+      },
+    });
   }
 
   @Get('post/:id')
@@ -44,6 +54,24 @@ export class PostsController {
     return this.postsService.getPost({
       where: { post_id: Number(id) },
       include: { comments: { orderBy: { time_stamp: 'desc' } } },
+    });
+  }
+
+  @Create('post/:id/upvote')
+  @UseGuards(SessionGuard)
+  async upVote(@Param('id') id: string) {
+    return this.postsService.update({
+      where: { post_id: Number(id) },
+      data: { upvotes_count: { increment: 1 } },
+    });
+  }
+
+  @Create('post/:id/downvote')
+  @UseGuards(SessionGuard)
+  async downVote(@Param('id') id: string) {
+    return this.postsService.update({
+      where: { post_id: Number(id) },
+      data: { upvotes_count: { decrement: 1 } },
     });
   }
 }
