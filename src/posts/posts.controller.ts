@@ -8,6 +8,7 @@ import {
   ClassSerializerInterceptor,
   SerializeOptions,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import Post from './posts.entity';
@@ -27,6 +28,21 @@ export class PostsController {
   @Get()
   async findAll() {
     return this.postsService.getPosts({
+      orderBy: {
+        time_stamp: 'desc',
+      },
+    });
+  }
+
+  @Get('page')
+  async findPage(@Query('cursor') cursor: string) {
+    const pageProps = cursor
+      ? { skip: 1, cursor: { post_id: Number(cursor) } }
+      : {};
+
+    return this.postsService.getPosts({
+      take: 10,
+      ...pageProps,
       orderBy: {
         time_stamp: 'desc',
       },
