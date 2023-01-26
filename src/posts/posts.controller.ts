@@ -43,6 +43,13 @@ export class PostsController {
     const data = (await this.postsService.getPosts({
       take: 5,
       ...pageProps,
+      include: {
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
       orderBy: {
         time_stamp: 'desc',
       },
