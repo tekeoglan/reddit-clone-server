@@ -44,6 +44,11 @@ export class PostsController {
       take: 5,
       ...pageProps,
       include: {
+        users: {
+          select: {
+            user_name: true,
+          },
+        },
         _count: {
           select: {
             comments: true,
@@ -80,7 +85,19 @@ export class PostsController {
   async findOne(@Param('id') id: string) {
     return this.postsService.getPost({
       where: { post_id: Number(id) },
-      include: { comments: { orderBy: { time_stamp: 'desc' } } },
+      include: {
+        users: { select: { user_name: true } },
+        comments: {
+          include: {
+            users: {
+              select: {
+                user_name: true,
+              },
+            },
+          },
+          orderBy: { time_stamp: 'desc' },
+        },
+      },
     });
   }
 
