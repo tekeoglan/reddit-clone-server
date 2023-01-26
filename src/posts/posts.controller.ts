@@ -36,17 +36,21 @@ export class PostsController {
 
   @Get('page')
   async findPage(@Query('cursor') cursor: string) {
-    const pageProps = cursor
+    const pageProps = Number(cursor)
       ? { skip: 1, cursor: { post_id: Number(cursor) } }
       : {};
 
-    return this.postsService.getPosts({
-      take: 10,
+    const data = (await this.postsService.getPosts({
+      take: 5,
       ...pageProps,
       orderBy: {
         time_stamp: 'desc',
       },
-    });
+    })) as Post[];
+
+    if (data.length === 0) return { data: null, next_cursor: null };
+
+    return { data: data, next_cursor: data[data.length - 1].post_id };
   }
 
   @Create('post')
