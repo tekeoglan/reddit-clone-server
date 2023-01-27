@@ -40,6 +40,8 @@ export class PostsController {
       ? { skip: 1, cursor: { post_id: Number(cursor) } }
       : {};
 
+    const firstItem = (await this.postsService.getPosts({ take: 1 })) as Post[];
+
     const data = (await this.postsService.getPosts({
       take: 5,
       ...pageProps,
@@ -61,6 +63,9 @@ export class PostsController {
     })) as Post[];
 
     if (data.length === 0) return { data: null, next_cursor: null };
+
+    if (data[data.length - 1].post_id === firstItem[0].post_id)
+      return { data: data, next_cursor: null };
 
     return { data: data, next_cursor: data[data.length - 1].post_id };
   }
