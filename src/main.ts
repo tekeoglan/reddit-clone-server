@@ -40,10 +40,14 @@ async function bootstrap() {
     secret: process.env.SESSION_SECRET || '',
     saveUninitialized: false,
     resave: false,
+    proxy: true,
     cookie: {
-      secure: false,
+      secure: process.env.NODE_ENV === 'production' ? true : false,
       httpOnly: false,
-      sameSite: false,
+      sameSite:
+        process.env.NODE_ENV === 'production'
+          ? ('none' as const)
+          : ('lax' as const),
       maxAge: 1000 * 60 * 60 * 24,
     },
   };
