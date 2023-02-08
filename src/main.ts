@@ -13,7 +13,7 @@ async function bootstrap() {
       origin: [
         'http://localhost:5173',
         'http://localhost:4173',
-        'https://reddit-clone-client-tekeoglan.vercel.app/',
+        'https://reddit-clone-client-tekeoglan.vercel.app',
       ],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
