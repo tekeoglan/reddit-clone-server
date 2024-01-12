@@ -27,4 +27,4 @@ COPY --from=builder --chown=node:node /home/node/dist/ ./dist
 ARG PORT
 EXPOSE ${PORT:-3000}
 
-CMD ["node", "dist/main.js"]
+ENTRYPOINT ["node", "dist/main.js"]
