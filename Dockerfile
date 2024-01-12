@@ -5,11 +5,13 @@ USER node
 WORKDIR /home/node
 
 COPY package*.json .
-RUN npm ci
+COPY yarn.lock .
+
+RUN yarn install
 
 COPY --chown=node:node . .
-RUN npm run build && npm prune --omit=dev
-
+RUN yarn prisma generate
+RUN yarn build
 
 # Final run stage
 FROM node:lts-alpine
