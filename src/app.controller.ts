@@ -4,6 +4,7 @@ import {
   Body,
   BadRequestException,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth/auth.service';
@@ -24,18 +25,21 @@ export class AppController {
     }
 
     req.session.user = user;
+
     return user;
   }
 
   @Post('register')
-  async register(@Body() data: UserCreateDTO, @Req() req: any) {
+  async register(@Body() data: UserCreateDTO) {
     const user = this.authService.register(data);
-    req.session.user = user;
+
     return user;
   }
 
   @Post('logout')
-  async logout(@Req() req: any) {
+  async logout(@Req() req: any, @Res() res: any) {
+    res.clearCookie('connect.sid');
+
     await req.session.destroy();
   }
 

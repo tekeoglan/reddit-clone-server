@@ -19,11 +19,14 @@ export class AuthService {
         email: userEmail,
       },
     })) as User;
+
     if (!user) return null;
-    const { password: hash, email, ...result } = user;
-    const isOk = await bcrypt.compare(userPassword, hash);
+
+    const isOk = await bcrypt.compare(userPassword, user.password);
+
     if (!isOk) return null;
-    return result as User;
+
+    return user;
   }
 
   async login(data: UserLoginDto) {
